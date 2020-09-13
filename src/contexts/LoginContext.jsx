@@ -5,7 +5,7 @@ export const LoginContext = createContext();
 export class LoginProvider extends Component {
     constructor(props) {
         super(props);
-        this.state = { isLogin: true, username: "admin", password: "password" };
+        this.state = { isLogin: false, username: "admin", password: "password" };
         this.toggleLogin = this.toggleLogin.bind(this);
     }
     toggleLogin() {
