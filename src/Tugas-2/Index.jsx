@@ -22,14 +22,6 @@ class Index extends Component {
         };
     }
 
-    deletePostHandler = () => {
-        axios.delete('http://backendexample.sanbercloud.com/api/movies/' + this.props.id)
-            .then(response => {
-                console.log(response);
-            });
-    }
-
-
     render() {
         const { movies } = this.state;
 
@@ -47,7 +39,8 @@ class Index extends Component {
                                             <img className="movie-img" src={movie.image_url} alt="" />
                                             <div className="movie-attribute">
                                                 <h2>Rating: {movie.rating}</h2>
-                                                <h2>Durasi: {movie.duration >= 60? `${movie.duration / 60} Jam` : `${movie.duration} Menit`}</h2>
+                                                <h2>Durasi: {(movie.duration % 60) < 10 ? `${Math.floor(movie.duration / 60)} Jam ${movie.duration % 60} Menit` : `${Math.floor(movie.duration / 60)} Jam ${movie.duration % 60} Menit`}</h2>
+                                                
                                                 <h2>Genre: {movie.genre}</h2>
                                             </div>
                                         </div>
