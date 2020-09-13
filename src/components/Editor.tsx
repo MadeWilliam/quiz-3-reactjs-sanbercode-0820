@@ -2,11 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { LoginContext } from "../contexts/LoginContext";
 import Logout from './Logout';
 import axios from 'axios';
+import { useForm } from "react-hook-form";
 
 export const Editor = () => {
-    const [yearError, setYearError] = useState(null)
-    const [ratingError, setRatingError] = useState(null)
-    const [disable, setDisabled] = useState(true)
+    const { register } = useForm();
     const { isLogin } = useContext(LoginContext)
     const [daftarMovies, setDaftarMovies] = useState(null)
     const [input, setInput] = useState({
@@ -21,25 +20,6 @@ export const Editor = () => {
     })
 
     useEffect(() => {
-        const formValidation = () => {
-            if (input.year < 1980) {
-                setYearError('Year cant be under 1980!')
-                if (input.rating < 0 || input.rating > 0) {
-                    setRatingError('Rating must be between 0 - 10!')
-                    return true
-                } else {
-                    setRatingError(null)
-                    return false
-                }
-            } else {
-                setYearError(null)
-                return false
-            }
-        }
-
-        console.log(disable);
-
-
         if (daftarMovies === null) {
             axios.get(`http://backendexample.sanbercloud.com/api/movies`)
                 .then(res => {
@@ -57,9 +37,7 @@ export const Editor = () => {
                     }))
                 })
         }
-        setDisabled(formValidation())
-
-    }, [daftarMovies, disable, input.year, input.rating])
+    }, [daftarMovies])
 
     const handleDelete = (event) => {
         let idDataMovies = parseInt(event.target.value)
@@ -137,6 +115,14 @@ export const Editor = () => {
     const handleSubmit = (event) => {
         // menahan submit
         event.preventDefault()
+
+        let description = input.description
+        let year = input.year
+        let duration = input.duration
+        let genre = input.genre
+        let rating = input.rating
+        let imgUrl = input.imgUrl
+        let id = input.id
 
         if (input.id === null) {
             axios.post(`http://backendexample.sanbercloud.com/api/movies`, {
@@ -256,11 +242,11 @@ export const Editor = () => {
                                 <br />
                                 <br />
                                 <label htmlFor="description" style={{ float: "left" }}> Description: </label>
-                                <textarea style={{ float: "right" }} type="text" required id="description" name="description" value={input.description} onChange={handleChange} />
+                                <textarea style={{ float: "right" }} required id="description" name="description" value={input.description} onChange={handleChange} />
                                 <br />
                                 <br />
                                 <label htmlFor="year" style={{ float: "left" }}> Year: </label>
-                                <input style={{ float: "right" }} type="number" required id="year" name="year" value={input.year} onChange={handleChange} />
+                                <input style={{ float: "right" }} type="number" ref={register({ required: true, min: 1980 })} id="year" name="year" value={input.year} onChange={handleChange} />
                                 <br />
                                 <br />
                                 <label htmlFor="duration" style={{ float: "left" }}> Duration: </label>
@@ -272,17 +258,17 @@ export const Editor = () => {
                                 <br />
                                 <br />
                                 <label htmlFor="rating" style={{ float: "left" }}> Rating: </label>
-                                <input style={{ float: "right" }} type="number" required id="rating" name="rating" value={input.rating} onChange={handleChange} />
+                                <input style={{ float: "right" }} type="number" ref={register({
+                                    required: true, min: 0, max: 10
+                                })} id="rating" name="rating" value={input.rating} onChange={handleChange} />
                                 <br />
                                 <br />
                                 <label htmlFor="imgUrl" style={{ float: "left" }}> Image Url: </label>
-                                <textarea style={{ float: "right" }} type="text" required id="imgUrl" name="imgUrl" value={input.imgUrl} onChange={handleChange} />
+                                <textarea style={{ float: "right" }} required id="imgUrl" name="imgUrl" value={input.imgUrl} onChange={handleChange} />
                                 <br />
                                 <br />
-                                {yearError && <p>{yearError}</p>}
-                                {ratingError && <p>{ratingError}</p>}
                                 <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", paddingBottom: "20px" }}>
-                                    <button className="submit" disabled={disable} >submit</button>
+                                    <button className="submit">submit</button>
                                 </div>
                             </form>
                         </div>

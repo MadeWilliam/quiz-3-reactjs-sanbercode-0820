@@ -54,7 +54,7 @@ class Login extends Component {
                                     </div>
                                     <div className="password-container">
                                         <label htmlFor="prPrice">Password : </label>
-                                        < input type="password" name="password" id="prPrice" value={this.state.password} onChange={this.handlePasswordChange} placeholder="assword" required />
+                                        < input type="password" name="password" id="prPrice" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password" required />
                                     </div>
                                     <button className="submit">Submit</button>
                                 </div>
