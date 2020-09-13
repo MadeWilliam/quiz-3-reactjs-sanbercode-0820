@@ -1,9 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { LoginContext } from "../contexts/LoginContext";
 import Logout from './Logout';
 import axios from 'axios';
 
 export const Editor = () => {
+    const firstRender = useRef(true)
     const [yearError, setYearError] = useState(null)
     const [ratingError, setRatingError] = useState(null)
     const [disable, setDisabled] = useState(true)
@@ -24,15 +25,15 @@ export const Editor = () => {
         const formValidation = () => {
             if (input.year < 1980) {
                 setYearError('Year cant be under 1980!')
-                if (input.rating < 0 || input.rating > 0) {
-                    setRatingError('Rating must be between 0 - 10!')
-                    return true
-                } else {
-                    setRatingError(null)
-                    return false
-                }
-            } else {
+                return true
+            } else if (input.rating < 0 || input.rating > 0) {
+                setRatingError('Rating must be between 0 - 10!')
+                return true
+            } else if (input.year >= 1980){
                 setYearError(null)
+                return false
+            } else {
+                setRatingError(null)
                 return false
             }
         }
@@ -44,6 +45,10 @@ export const Editor = () => {
             axios.get(`http://backendexample.sanbercloud.com/api/movies`)
                 .then(res => {
                     setDaftarMovies(res.data.map(el => {
+                        if (firstRender.current) {
+                            firstRender.current = false
+                            return "";
+                        }
                         return {
                             id: el.id,
                             title: el.title,
@@ -57,6 +62,7 @@ export const Editor = () => {
                     }))
                 })
         }
+
         setDisabled(formValidation())
 
     }, [daftarMovies, disable, input.year, input.rating])
