@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { LoginContext } from '../contexts/LoginContext';
 
 const Nav = () => {
-    const { isLogin } = useContext(LoginContext)
+    const { isLogin, toggleLogin } = useContext(LoginContext)
 
     return (
         <div>
@@ -18,14 +18,21 @@ const Nav = () => {
                             <Link to='/about'>About</Link>
                         </li>
                         {
-                            isLogin && <>
-                                <li>
-                                    <Link to='/editor'>Editor</Link>
-                                </li>
-                                <li>
-                                    <Link to='/login'>Login</Link>
-                                </li>
+                            isLogin &&
+                            <>
+                            <li>
+                                <Link to='/editor'>Movie Editor</Link>
+                            </li>
+                            <li>
+                                <Link to='/logout' onClick={toggleLogin}>Logout</Link>
+                            </li>
                             </>
+                        }
+                        {
+                            !isLogin &&
+                            <li>
+                                <Link to='/login'>Login</Link>
+                            </li>
                         }
                     </ul>
                 </nav>

@@ -4,6 +4,7 @@ import Index from '../Tugas-2/Index'
 import About from '../Tugas-2/About'
 import Login from './Login'
 import Editor from './Editor'
+import Logout from './Logout'
 
 const Routes = () => {
     return (
@@ -19,6 +20,9 @@ const Routes = () => {
             </Route>
             <Route path="/login">
                 <Login />
+            </Route>
+            <Route path="/logout">
+                <Logout />
             </Route>
         </Switch>
     )
